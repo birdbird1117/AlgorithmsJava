@@ -5,6 +5,8 @@ public class Percolation {
     // WeightedQuickUnionUF is 1D
     private WeightedQuickUnionUF grid1D;
     private int N;
+    private int cnt;
+    private boolean[] lastLineCol;
 
     public Percolation(int n) // create n-by-n grid, with all sites blocked
     {
@@ -12,9 +14,15 @@ public class Percolation {
             throw new IllegalArgumentException("n is negative");
         else {
             N = n;
+            cnt = 0;
             grid1Dstatus = new boolean[n * n + 2];
             grid1D = new WeightedQuickUnionUF(n * n + 2);
+            lastLineCol = new boolean[n + 1];
         }
+    }
+
+    public int numberOfOpenSites() {
+        return cnt;
     }
 
     private int xyTo1D(int row, int col) {
@@ -34,6 +42,7 @@ public class Percolation {
             if (grid1Dstatus[xyTo1D(row, col)] == false)// if is open
             {
                 grid1Dstatus[xyTo1D(row, col)] = true; // if not, open it
+                cnt++;
             }
         }
         // union to virtural top
@@ -41,7 +50,8 @@ public class Percolation {
             grid1D.union(N * N, xyTo1D(row, col));
         // union to virtural bottom
         if (row == N)
-            grid1D.union(N * N + 1, xyTo1D(row, col));
+            lastLineCol[col] = true;
+        //   grid1D.union(N * N + 1, xyTo1D(row, col));
         // union to nabors
         if ((row != 1) && (grid1Dstatus[xyTo1D(row - 1, col)] == true))
             grid1D.union(xyTo1D(row - 1, col), xyTo1D(row, col));
@@ -51,6 +61,11 @@ public class Percolation {
             grid1D.union(xyTo1D(row + 1, col), xyTo1D(row, col));
         if ((col != N) && (grid1Dstatus[xyTo1D(row, col + 1)] == true))
             grid1D.union(xyTo1D(row, col + 1), xyTo1D(row, col));
+
+        for (int i = 1; i <= N; i++) {
+            if ((lastLineCol[i]) && (grid1D.connected(xyTo1D(N - 1, i), N * N)))
+                grid1D.union(N * N + 1, xyTo1D(row, col));
+        }
     }
 
     public boolean isOpen(int row, int col) // is site (row, col) open?
