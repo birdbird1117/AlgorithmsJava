@@ -28,7 +28,7 @@ public class Percolation {
     private int xyTo1D(int row, int col) {
         if (row <= 0 || col <= 0 || row > N || col > N) {
             System.out.printf("rol is %d, col is %d", row, col);
-            throw new IndexOutOfBoundsException("row or col index i out of bounds");
+            throw new IllegalArgumentException("row or col index i out of bounds");
         } else
             return (row - 1) * N + (col - 1);
     }
@@ -37,7 +37,7 @@ public class Percolation {
     public void open(int row, int col) {
         if (row <= 0 || col <= 0 || row > N || col > N) {
             System.out.printf("rol is %d, col is %d", row, col);
-            throw new IndexOutOfBoundsException("row or col index i out of bounds");
+            throw new IllegalArgumentException("row or col index i out of bounds");
         } else {
             if (grid1Dstatus[xyTo1D(row, col)] == false)// if is open
             {
@@ -50,8 +50,8 @@ public class Percolation {
             grid1D.union(N * N, xyTo1D(row, col));
         // union to virtural bottom
         if (row == N)
-            lastLineCol[col] = true;
-        //   grid1D.union(N * N + 1, xyTo1D(row, col));
+          //  lastLineCol[col] = true;
+           grid1D.union(N * N + 1, xyTo1D(row, col));
         // union to nabors
         if ((row != 1) && (grid1Dstatus[xyTo1D(row - 1, col)] == true))
             grid1D.union(xyTo1D(row - 1, col), xyTo1D(row, col));
@@ -62,17 +62,17 @@ public class Percolation {
         if ((col != N) && (grid1Dstatus[xyTo1D(row, col + 1)] == true))
             grid1D.union(xyTo1D(row, col + 1), xyTo1D(row, col));
 
-        for (int i = 1; i <= N; i++) {
+ /*        for (int i = 1; i <= N; i++) {
             if ((lastLineCol[i]) && (grid1D.connected(xyTo1D(N - 1, i), N * N)))
                 grid1D.union(N * N + 1, xyTo1D(row, col));
-        }
+        } */
     }
 
     public boolean isOpen(int row, int col) // is site (row, col) open?
     {
         if (row <= 0 || col <= 0 || row > N || col > N) {
             System.out.printf("rol is %d, col is %d", row, col);
-            throw new IndexOutOfBoundsException("row or col index i out of bounds");
+            throw new IllegalArgumentException("row or col index i out of bounds");
         } else
             return grid1Dstatus[xyTo1D(row, col)] == true;
     }
@@ -82,7 +82,7 @@ public class Percolation {
     public boolean isFull(int row, int col) // is site (row, col) full?
     {
         if (row <= 0 || col <= 0 || row > N || col > N)
-            throw new IndexOutOfBoundsException("row or col index i out of bounds");
+            throw new IllegalArgumentException("row or col index i out of bounds");
         else {
             return grid1D.connected(xyTo1D(row, col), (N * N));
         }
