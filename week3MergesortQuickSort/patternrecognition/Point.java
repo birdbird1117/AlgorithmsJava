@@ -111,13 +111,7 @@ public class Point implements Comparable<Point> {
 
     private class pointComparator implements Comparator<Point> {
         public int compare(Point v, Point w) {
-            if ((v.x == w.x) && (v.y == w.y)) {
-                return Integer.MIN_VALUE;
-            } else if (v.y == w.y) {
-                return 0 / 1;
-            } else if (v.x == w.x) {
-                return Integer.MAX_VALUE;
-            } else if (slopeTo(v) < slopeTo(w)) {
+            if (slopeTo(v) < slopeTo(w)) {
                 return -1;
             } else if (slopeTo(v) > slopeTo(w)) {
                 return 1;
