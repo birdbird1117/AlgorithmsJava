@@ -6,134 +6,141 @@ public class FastCollinearPoints {
     private int cnt = 0;
     private Point[] testPoints;
     private Point[] originaltestPoints;
-    private LineSegment[] segs;
+    private ArrayList<LineSegment> segs;
     private int segs_index = 0;
-    
-    public FastCollinearPoints(Point[] points){
+    private ArrayList<Double> slopeArrayList;
+    private ArrayList<Point> startPoints;
+    private ArrayList<Point> endPoints;
+
+    public FastCollinearPoints(Point[] points) {
         if (points == null) {
-            throw new NullPointerException("argument is null");
+            throw new IllegalArgumentException("argument is null");
         }
-        
-        for (int i = 0; i < points.length; i++)
-        {
+
+        for (int i = 0; i < points.length; i++) {
             if (points[i] == null)
-                throw new NullPointerException("argument is null");
+                throw new IllegalArgumentException("argument is null");
         }
-        for (int i = 0; i < points.length; i++)
-        {
-            for (int j = i+1; j < points.length; j++)
-            {
-                if (points[i].compareTo(points[j])==0)
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                if (points[i].compareTo(points[j]) == 0)
                     throw new IllegalArgumentException("repeated points");
             }
         }
         testPoints = points;
         originaltestPoints = new Point[testPoints.length];
-        for (int i = 0; i < points.length; i++)
-        {
+        for (int i = 0; i < points.length; i++) {
             originaltestPoints[i] = points[i];
         }
-        segs = new LineSegment[testPoints.length];// too long
-    }    // finds all line segments containing 4 points
-    
-    
-    public           int numberOfSegments(){
+        slopeArrayList = new ArrayList<>();
+        startPoints = new ArrayList<>();
+        endPoints = new ArrayList<>();
+        segs = new ArrayList<>();// too long
+    } // finds all line segments containing 4 points
+
+    public int numberOfSegments() {
         return cnt;
-    }        // the number of line segments
-    
+    } // the number of line segments
+
     public LineSegment[] segments() {
-        
+
         Point start = null, end = null;
         int tmp = 0;
-        Arrays.sort(originaltestPoints); // which order?
-        
+
         // debuging
-//        for (int i = 0; i < testPoints.length; i++)
-//            StdOut.println("originaltestpoints1" +originaltestPoints[i]);   
-        
-        for (int i = 0; i < testPoints.length; i++)
-        {
-            Arrays.sort(testPoints,originaltestPoints[i].slopeOrder());
-            
-//            for (int k = 0; k < testPoints.length; k++) // debugging
-//                StdOut.println("testpoints2" +testPoints[k]); 
-//            StdOut.println("**********"+i); 
-            
-            for (int j = 0; j < testPoints.length-3; j++)
-            {
-                if(testPoints[j].slopeTo(testPoints[j+1]) == testPoints[j+3].slopeTo(testPoints[j]))
-                {
-                                                    // update start and end
-                    if (testPoints[j].compareTo(testPoints[j+1]) < 0)
-                    {
-                        start = testPoints[j];
-                        end = testPoints[j+1];
-                    }
-                    else
-                    {
-                        start = testPoints[j+1];
+        //        for (int i = 0; i < testPoints.length; i++)
+        //            StdOut.println("originaltestpoints1" +originaltestPoints[i]);   
+
+        // sort testPoints according to each point in originalPoints
+        for (int i = 0; i < testPoints.length; i++) {
+
+            Arrays.sort(testPoints, originaltestPoints[i].slopeOrder());
+
+            StdOut.println("testpoints,i round " + i + " sort with points: " + originaltestPoints[i].toString()
+                    + "----------------------------");
+            for (Point var : testPoints) {
+                StdOut.println(var.toString());
+            }
+            tmp = 0; //FIXME
+            for (int j = 1; j < testPoints.length - 3; j++) {
+                StdOut.println("j , round " + j);
+
+                if ((testPoints[0].slopeTo(testPoints[j]) == testPoints[j].slopeTo(testPoints[j + 1]))
+                        && ((testPoints[j].slopeTo(testPoints[j + 1]) == testPoints[j].slopeTo(testPoints[j + 2])))) {
+                    // update start and end
+                    if (testPoints[0].compareTo(testPoints[j]) < 0) {
+                        start = testPoints[0];
                         end = testPoints[j];
-                    }
-                    
-                    if (start.compareTo(testPoints[j+2]) > 0)
-                    {
-                        start = testPoints[j+2];
-                    }
-                    if (end.compareTo(testPoints[j+2]) < 0)
-                    {
-                        end = testPoints[j+2];
-                    }
-                    
-                    if (start.compareTo(testPoints[j+3]) > 0)
-                    {
-                        start = testPoints[j+3];
-                    }
-                    if (end.compareTo(testPoints[j+3]) < 0)
-                    {
-                        end = testPoints[j+3];
+                    } else {
+                        start = testPoints[j];
+                        end = testPoints[0];
                     }
 
-//                    StdOut.println("1j" + j);                                            
-                    for (int l = j+4; l < testPoints.length; l++)
-                    {
-//                        StdOut.println("l" + l);    
-//                        StdOut.println("2j" + j);                                            
-                        if(start.slopeTo(end) == testPoints[l].slopeTo(start))
-                        {
-                            if (start.compareTo(testPoints[l]) > 0)
-                            {
+                    if (start.compareTo(testPoints[j + 1]) > 0) {
+                        start = testPoints[j + 1];
+                    }
+                    if (end.compareTo(testPoints[j + 1]) < 0) {
+                        end = testPoints[j + 1];
+                    }
+
+                    if (start.compareTo(testPoints[j + 2]) > 0) {
+                        start = testPoints[j + 2];
+                    }
+                    if (end.compareTo(testPoints[j + 2]) < 0) {
+                        end = testPoints[j + 2];
+                    }
+                    j += 2;
+                    for (int l = j + 1; l < testPoints.length; l++) {
+                        if (start.slopeTo(end) == testPoints[l].slopeTo(start)) {
+                            if (start.compareTo(testPoints[l]) > 0) {
                                 start = testPoints[l];
                             }
-                            if (end.compareTo(testPoints[l]) < 0)
-                            {
+                            if (end.compareTo(testPoints[l]) < 0) {
                                 end = testPoints[l];
                             }
-                            tmp = l-j-1;
-                        }
-                        else
-                           tmp = 3;
+                            j++;
+                        } else
+                            break;
                     }
-                    
-                    j = j+tmp;      
-//                    StdOut.println("tmp" + tmp);                                            
-//                    StdOut.println("3j" + j);                                            
-//                    StdOut.println("start" +start);                                            
-//                    StdOut.println("end" +end);      
-                    segs[segs_index++] = new LineSegment(start,end);
+                    StdOut.println("j: " + j);
+
+                    StdOut.println("start: " + start.toString() + " end: " + end.toString());
+
+                    LineSegment temp = new LineSegment(start, end);
+
+                    if (slopeArrayList.indexOf(start.slopeTo(end)) == -1) {
+                        segs.add(temp);
+                        startPoints.add(start);
+                        endPoints.add(end);
+                        slopeArrayList.add(start.slopeTo(end));
+                    } else {
+                        if (start.compareTo(startPoints.get(slopeArrayList.indexOf(start.slopeTo(end)))) != 0) {
+                            segs.add(temp);
+                            startPoints.add(start);
+                            endPoints.add(end);
+                            slopeArrayList.add(start.slopeTo(end));
+                        }
+                    }
+
+                    // if ((slopeArrayList.indexOf(start.slopeTo(end)) == -1) && (startPoints.indexOf(start) == -1)
+                    //         || (slopeArrayList.indexOf(start.slopeTo(end)) != startPoints.indexOf(start))) {
+                    //     segs.add(temp);
+                    //     startPoints.add(start);
+                    //     endPoints.add(end);
+                    //     slopeArrayList.add(start.slopeTo(end));
+                    // }
                 }
-            }            
+            }
         }
-        
-        
-        LineSegment[] res = new LineSegment[segs_index];
-        for (int i = 0; i < segs_index; i++)
-            res[i] = segs[i];
+
+        LineSegment[] res = new LineSegment[segs.size()];
+        for (int i = 0; i < segs.size(); i++)
+            res[i] = segs.get(i);
         return res;
-    }               // the line segments
-    
-    
+    } // the line segments
+
     public static void main(String[] args) {
-        
+
         // read the n points from a file
         In in = new In(args[0]);
         int n = in.readInt();
@@ -143,7 +150,7 @@ public class FastCollinearPoints {
             int y = in.readInt();
             points[i] = new Point(x, y);
         }
-        
+
         // draw the points
         StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
@@ -152,7 +159,7 @@ public class FastCollinearPoints {
             p.draw();
         }
         StdDraw.show();
-        
+
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
@@ -161,6 +168,5 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
     }
-    
-    
+
 }
