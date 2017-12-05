@@ -45,25 +45,21 @@ public class FastCollinearPoints {
     public LineSegment[] segments() {
 
         Point start = null, end = null;
-        int tmp = 0;
-
-        // debuging
-        //        for (int i = 0; i < testPoints.length; i++)
-        //            StdOut.println("originaltestpoints1" +originaltestPoints[i]);   
+        int tmp = 0; 
 
         // sort testPoints according to each point in originalPoints
         for (int i = 0; i < testPoints.length; i++) {
 
             Arrays.sort(testPoints, originaltestPoints[i].slopeOrder());
 
-            StdOut.println("testpoints,i round " + i + " sort with points: " + originaltestPoints[i].toString()
-                    + "----------------------------");
+            //StdOut.println("testpoints,i round " + i + " sort with points: " + originaltestPoints[i].toString()
+            //        + "----------------------------");
             for (Point var : testPoints) {
-                StdOut.println(var.toString());
+                //StdOut.println(var.toString());
             }
             tmp = 0; //FIXME
             for (int j = 1; j < testPoints.length - 2; j++) {
-                StdOut.println("j , round " + j);
+                //StdOut.println("j , round " + j);
 
                 if ((testPoints[0].slopeTo(testPoints[j]) == testPoints[j].slopeTo(testPoints[j + 1]))
                         && ((testPoints[j].slopeTo(testPoints[j + 1]) == testPoints[j].slopeTo(testPoints[j + 2])))) {
@@ -102,24 +98,28 @@ public class FastCollinearPoints {
                         } else
                             break;
                     }
-                    StdOut.println("j: " + j);
+                    //StdOut.println("j: " + j);
 
-                    StdOut.println("start: " + start.toString() + " end: " + end.toString());
+                    //StdOut.println("start: " + start.toString() + " end: " + end.toString());
 
                     LineSegment temp = new LineSegment(start, end);
 
-                    // FIXME, bug obivious on vertical5.txt
+                    // FIXME, bug obivious on vertical 5
                     if (slopeArrayList.indexOf(start.slopeTo(end)) == -1) {
                         segs.add(temp);
                         startPoints.add(start);
                         endPoints.add(end);
                         slopeArrayList.add(start.slopeTo(end));
                     } else {
-                        if (start.compareTo(startPoints.get(slopeArrayList.indexOf(start.slopeTo(end)))) != 0) {
-                            segs.add(temp);
-                            startPoints.add(start);
-                            endPoints.add(end);
-                            slopeArrayList.add(start.slopeTo(end));
+                        for (int k = 0; k < slopeArrayList.size(); k++) {
+
+                            if ((start.compareTo(startPoints.get(k)) != 0)
+                                    && (slopeArrayList.get(k) == start.slopeTo(end))) {
+                                segs.add(temp);
+                                startPoints.add(start);
+                                endPoints.add(end);
+                                slopeArrayList.add(start.slopeTo(end));
+                            }
                         }
                     }
 
