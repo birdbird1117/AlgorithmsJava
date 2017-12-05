@@ -108,6 +108,7 @@ public class FastCollinearPoints {
 
                     LineSegment temp = new LineSegment(start, end);
 
+                    // FIXME, bug obivious on vertical5.txt
                     if (slopeArrayList.indexOf(start.slopeTo(end)) == -1) {
                         segs.add(temp);
                         startPoints.add(start);
