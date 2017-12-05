@@ -62,7 +62,7 @@ public class FastCollinearPoints {
                 StdOut.println(var.toString());
             }
             tmp = 0; //FIXME
-            for (int j = 1; j < testPoints.length - 3; j++) {
+            for (int j = 1; j < testPoints.length - 2; j++) {
                 StdOut.println("j , round " + j);
 
                 if ((testPoints[0].slopeTo(testPoints[j]) == testPoints[j].slopeTo(testPoints[j + 1]))
