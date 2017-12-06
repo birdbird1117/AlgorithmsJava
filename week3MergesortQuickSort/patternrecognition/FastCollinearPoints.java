@@ -3,12 +3,9 @@ import java.lang.*;
 import java.util.*;
 
 public class FastCollinearPoints {
-    private int cnt = 0;
     private Point[] testPoints;
     private Point[] originaltestPoints;
     private ArrayList<LineSegment> segs;
-    private int segs_index = 0;
-    private ArrayList<Double> slopeArrayList;
     private ArrayList<Point> startPoints;
     private ArrayList<Point> endPoints;
 
@@ -32,20 +29,19 @@ public class FastCollinearPoints {
         for (int i = 0; i < points.length; i++) {
             originaltestPoints[i] = points[i];
         }
-        slopeArrayList = new ArrayList<>();
         startPoints = new ArrayList<>();
         endPoints = new ArrayList<>();
         segs = new ArrayList<>();// too long
     } // finds all line segments containing 4 points
 
     public int numberOfSegments() {
-        return cnt;
+        return segs.size();
     } // the number of line segments
 
     public LineSegment[] segments() {
 
         Point start = null, end = null;
-        int tmp = 0; 
+        int tmp = 0;
 
         // sort testPoints according to each point in originalPoints
         for (int i = 0; i < testPoints.length; i++) {
@@ -104,24 +100,17 @@ public class FastCollinearPoints {
 
                     LineSegment temp = new LineSegment(start, end);
 
-                    // FIXME, bug obivious on vertical 5
-                    if (slopeArrayList.indexOf(start.slopeTo(end)) == -1) {
+                    //StdOut.println("start index in linklist: " + startPoints.indexOf(start));
+                    //StdOut.println("end index in linklist: " + endPoints.indexOf(end));
+                    if (((startPoints.indexOf(start) == -1) || (endPoints.indexOf(end) == -1))
+                            || ((startPoints.get(endPoints.indexOf(end)) != start)
+                                    && (endPoints.get(startPoints.indexOf(start)) != end))) {
+                        //StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
                         segs.add(temp);
                         startPoints.add(start);
                         endPoints.add(end);
-                        slopeArrayList.add(start.slopeTo(end));
-                    } else {
-                        for (int k = 0; k < slopeArrayList.size(); k++) {
-
-                            if ((start.compareTo(startPoints.get(k)) != 0)
-                                    && (slopeArrayList.get(k) == start.slopeTo(end))) {
-                                segs.add(temp);
-                                startPoints.add(start);
-                                endPoints.add(end);
-                                slopeArrayList.add(start.slopeTo(end));
-                            }
-                        }
                     }
+                    //                    }
 
                     // if ((slopeArrayList.indexOf(start.slopeTo(end)) == -1) && (startPoints.indexOf(start) == -1)
                     //         || (slopeArrayList.indexOf(start.slopeTo(end)) != startPoints.indexOf(start))) {
