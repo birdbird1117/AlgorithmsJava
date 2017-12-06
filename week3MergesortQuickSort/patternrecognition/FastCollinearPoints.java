@@ -100,12 +100,19 @@ public class FastCollinearPoints {
 
                     LineSegment temp = new LineSegment(start, end);
 
-                    //StdOut.println("start index in linklist: " + startPoints.indexOf(start));
-                    //StdOut.println("end index in linklist: " + endPoints.indexOf(end));
+                    StdOut.println("start_end_list long: " + startPoints.size());
+                    StdOut.println("start index in linklist: " + startPoints.indexOf(start) + " start is: "
+                            + start.toString());
+                    //                   if (startPoints.indexOf(start) != -1)
+                    //                       StdOut.println(" at same index in endlist is: "+ endPoints.get(startPoints.indexOf(start)).toString());
+                    StdOut.println("end index in linklist: " + endPoints.indexOf(end) + " end is: " + end.toString());
+                    //                  if (endPoints.indexOf(end) != -1)
+                    //                       StdOut.println(" at same index in startlist is: "                               + startPoints.get(endPoints.indexOf(end)).toString());
                     if (((startPoints.indexOf(start) == -1) || (endPoints.indexOf(end) == -1))
+                    // FIXME, bug here is that there can be,(a,c) (d,b) before (a,b), but indexof only return the earlist in the list
                             || ((startPoints.get(endPoints.indexOf(end)) != start)
                                     && (endPoints.get(startPoints.indexOf(start)) != end))) {
-                        //StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
+                        StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
                         segs.add(temp);
                         startPoints.add(start);
                         endPoints.add(end);
