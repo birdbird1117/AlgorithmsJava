@@ -3,9 +3,9 @@ import java.lang.*;
 import java.util.*;
 
 public class BruteCollinearPoints {
-    private Point[] testPoints;
+    private final Point[] testPoints;
     private int cnt;
-    private ArrayList<LineSegment> segs;
+    private final ArrayList<LineSegment> segs;
     //private int segs_index;
 
     public BruteCollinearPoints(Point[] points) {
