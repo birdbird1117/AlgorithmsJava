@@ -1,3 +1,4 @@
+
 /******************************************************************************
  *  Compilation:  javac PuzzleChecker.java
  *  Execution:    java PuzzleChecker filename1.txt filename2.txt ...
