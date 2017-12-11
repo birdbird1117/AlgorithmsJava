@@ -100,33 +100,46 @@ public class FastCollinearPoints {
 
                     LineSegment temp = new LineSegment(start, end);
 
-                    StdOut.println("start_end_list long: " + startPoints.size());
-                    StdOut.println("start index in linklist: " + startPoints.indexOf(start) + " start is: "
-                            + start.toString());
+                    //StdOut.println("start_end_list long: " + startPoints.size());
+                    //StdOut.println("start index in linklist: " + startPoints.indexOf(start) + " start is: "
+                    //        + start.toString());
                     //                   if (startPoints.indexOf(start) != -1)
                     //                       StdOut.println(" at same index in endlist is: "+ endPoints.get(startPoints.indexOf(start)).toString());
-                    StdOut.println("end index in linklist: " + endPoints.indexOf(end) + " end is: " + end.toString());
+                    //StdOut.println("end index in linklist: " + endPoints.indexOf(end) + " end is: " + end.toString());
                     //                  if (endPoints.indexOf(end) != -1)
                     //                       StdOut.println(" at same index in startlist is: "                               + startPoints.get(endPoints.indexOf(end)).toString());
-                    if (((startPoints.indexOf(start) == -1) || (endPoints.indexOf(end) == -1))
-                    // FIXME, bug here is that there can be,(a,c) (d,b) before (a,b), but indexof only return the earlist in the list
-                            || ((startPoints.get(endPoints.indexOf(end)) != start)
-                                    && (endPoints.get(startPoints.indexOf(start)) != end))) {
-                        StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
+                    if (((startPoints.indexOf(start) == -1) || (endPoints.indexOf(end) == -1))) {
+                        //StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
                         segs.add(temp);
                         startPoints.add(start);
                         endPoints.add(end);
-                    }
-                    //                    }
+                    } else {
+                        // FIXME, bug here is that there can be,(a,c) (d,b) before (a,b), but indexof only return the earlist in the list
+                        boolean segexist = false;
+                        for (int l = 0; l < startPoints.size(); l++) {
+                            if ((startPoints.get(l) == start) || (endPoints.get(l) == end)) {
+                                segexist = true;
+                            }
+                        }
 
-                    // if ((slopeArrayList.indexOf(start.slopeTo(end)) == -1) && (startPoints.indexOf(start) == -1)
-                    //         || (slopeArrayList.indexOf(start.slopeTo(end)) != startPoints.indexOf(start))) {
-                    //     segs.add(temp);
-                    //     startPoints.add(start);
-                    //     endPoints.add(end);
-                    //     slopeArrayList.add(start.slopeTo(end));
-                    // }
+                        if (!segexist) {
+                            //StdOut.println("Adding start: " + start.toString() + " end: " + end.toString());
+                            segs.add(temp);
+                            startPoints.add(start);
+                            endPoints.add(end);
+                        }
+                    }
                 }
+                //                    }
+
+                // if ((slopeArrayList.indexOf(start.slopeTo(end)) == -1) && (startPoints.indexOf(start) == -1)
+                //         || (slopeArrayList.indexOf(start.slopeTo(end)) != startPoints.indexOf(start))) {
+                //     segs.add(temp);
+                //     startPoints.add(start);
+                //     endPoints.add(end);
+                //     slopeArrayList.add(start.slopeTo(end));
+                // }
+
             }
         }
 
