@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.*;
 import java.lang.*;
 //import java.util.*;
+import java.util.ArrayList;
 
 public class Solver {
 
@@ -15,10 +16,15 @@ public class Solver {
         private Board nodeboard;
         private int priority = 0;
         private int moves = 0;
+        private Node predecessor = null;
 
         private Node(Board board, int moves) {
             this.nodeboard = board;
             this.moves = moves;
+        }
+
+        private setPredecessor(Node that) {
+            predecessor = that;
         }
 
         private int priority() {
@@ -55,8 +61,8 @@ public class Solver {
 
         //boards.push(aboard);
 
-        Bag<Board> board_history = new Bag<Board>();
-        Bag<Board> board_history_twin = new Bag<Board>();
+        ArrayList<Board> board_history = new ArrayList<Board>();
+        ArrayList<Board> board_history_twin = new ArrayList<Board>();
 
         //        board_history.add(node_aboard.board);
         //        board_history_twin.add(node_aboard_twin.board);
@@ -80,8 +86,6 @@ public class Solver {
 
             }
 
-            board_history.add(board1);
-            board_history_twin.add(board1_twin);
 
             boolean repeated = false;
             boolean repeated_twin = false;
@@ -113,6 +117,9 @@ public class Solver {
                 }
                 repeated_twin = false;
             }
+
+            board_history.add(board1);
+            board_history_twin.add(board1_twin);
 
         }
 
