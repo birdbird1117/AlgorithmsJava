@@ -23,13 +23,13 @@ public class Solver {
             this.moves = moves;
         }
 
-        private setPredecessor(Node that) {
-            predecessor = that;
+        private void setPredecessor(Node that) {
+            this.predecessor = that;
         }
 
         private int priority() {
-            priority = moves + nodeboard.manhattan();
-            return priority;
+            this.priority = this.moves + this.nodeboard.manhattan();
+            return this.priority;
         }
 
         public int compareTo(Node that) {
@@ -48,7 +48,9 @@ public class Solver {
         aboard = initial;
         boards = new Queue<Board>();
         Node node_aboard = new Node(aboard, 0);
+        node_aboard.predecessor = null;
         Node node_aboard_twin = new Node(aboard.twin(), 0);
+        node_aboard_twin.predecessor = null;
 
         pq = new MinPQ<Node>();
         pq_twin = new MinPQ<Node>();
@@ -67,59 +69,61 @@ public class Solver {
         //        board_history.add(node_aboard.board);
         //        board_history_twin.add(node_aboard_twin.board);
         boolean found = false;
+        Node board1 = pq.delMin();
+        Node board1_twin = pq_twin.delMin();
         while (!found)//pq.delMin().board.isGoal() | !pq_twin.delMin().board.isGoal() )
         {
-            Board board1 = pq.delMin().nodeboard;
-            Board board1_twin = pq_twin.delMin().nodeboard;
 
             //            StdOut.println("board1"+board1);
             //            StdOut.println("moves"+moves);
 
-            boards.enqueue(board1);
+            boards.enqueue(board1.nodeboard);
 
-            if ((board1.isGoal()) | (board1_twin.isGoal())) {
+            if ((board1.nodeboard.isGoal()) | (board1_twin.nodeboard.isGoal())) {
                 found = true;
-                if (board1.isGoal())
+                if (board1.nodeboard.isGoal())
                     issolvable = true;
                 else
                     issolvable = false;
 
             }
 
-
             boolean repeated = false;
             boolean repeated_twin = false;
             moves++;
-            for (Board i : board1.neighbors()) {
-                //////                StdOut.println("board1.neighbors"+i);
-                for (Board j : board_history) {
-                    //                    StdOut.println("board1_history"+j);
-                    if (i.equals(j))
-                        repeated = true;
+            for (Board i : board1.nodeboard.neighbors()) {
+                if ((board1.predecessor == null) || (i.equals(board1.predecessor.nodeboard) != false)) {
+                    Node aNode = new Node(i, moves());
+                    aNode.predecessor = board1;
+                    pq.insert(aNode);
                 }
-                if (repeated != true) {
-                    pq.insert(new Node(i, moves));
-                    board_history.add(i);
-
-                }
-                repeated = false;
             }
 
-            for (Board i : board1_twin.neighbors()) {
-                for (Board j : board_history_twin) {
-                    if (i.equals(j))
-                        repeated_twin = true;
+            for (Board i : board1_twin.nodeboard.neighbors()) {
+                if ((board1.predecessor == null) || (i.equals(board1_twin.predecessor.nodeboard) != false)) {
+                    Node aNode = new Node(i, moves());
+                    aNode.predecessor = board1_twin;
+                    pq.insert(aNode);
                 }
-                if (repeated_twin != true) {
-                    pq_twin.insert(new Node(i, moves));
-                    board_history_twin.add(i);
-
-                }
-                repeated_twin = false;
             }
 
-            board_history.add(board1);
-            board_history_twin.add(board1_twin);
+            board1 = pq.delMin();
+            board1_twin = pq_twin.delMin();
+            // for (Board i : board1_twin.neighbors()) {
+            //     for (Board j : board_history_twin) {
+            //         if (i.equals(j))
+            //             repeated_twin = true;
+            //     }
+            //     if (repeated_twin != true) {
+            //         pq_twin.insert(new Node(i, moves));
+            //         board_history_twin.add(i);
+
+            //     }
+            //     repeated_twin = false;
+            // }
+
+            // board_history.add(board1);
+            // board_history_twin.add(board1_twin);
 
         }
 
