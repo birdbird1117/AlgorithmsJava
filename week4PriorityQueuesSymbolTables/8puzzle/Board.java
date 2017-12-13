@@ -184,13 +184,13 @@ public class Board {
 
         // solve the puzzle
 
-        StdOut.println("goal " + initial.isGoal());
-        StdOut.println("string " + initial.toString());
-        StdOut.println("man " + initial.manhattan());
-        StdOut.println("man " + initial.hamming());
+        StdOut.println("goal: " + initial.isGoal());
+        StdOut.println("string: " + initial.toString());
+        StdOut.println("manhattan: " + initial.manhattan());
+        StdOut.println("hamming: " + initial.hamming());
         for (Board board : initial.neighbors())
             StdOut.println(board);
-        StdOut.println("twin " + initial.twin());
+        StdOut.println("twin: " + initial.twin());
 
     }
 }

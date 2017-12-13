@@ -9,18 +9,18 @@ public class Solver {
     private MinPQ<Node> pq_twin;
     private int moves = 0;
     private Queue<Board> boards;
-    private Board aboard;
+    private Board aBoard;
     private boolean issolvable = false;
 
     private class Node implements Comparable<Node> {
         private Board nodeboard;
         private int priority = 0;
-        private int moves = 0;
+        private int nodeMoves = 0;
         private Node predecessor = null;
 
         private Node(Board board, int moves) {
             this.nodeboard = board;
-            this.moves = moves;
+            this.nodeMoves = moves;
         }
 
         private void setPredecessor(Node that) {
@@ -28,7 +28,7 @@ public class Solver {
         }
 
         private int priority() {
-            this.priority = this.moves + this.nodeboard.manhattan();
+            this.priority = this.nodeMoves + this.nodeboard.manhattan();
             return this.priority;
         }
 
@@ -45,37 +45,26 @@ public class Solver {
 
     public Solver(Board initial) // find a solution to the initial board (using the A* algorithm)
     {
-        aboard = initial;
+        aBoard = initial;
         boards = new Queue<Board>();
-        Node node_aboard = new Node(aboard, 0);
-        node_aboard.predecessor = null;
-        Node node_aboard_twin = new Node(aboard.twin(), 0);
-        node_aboard_twin.predecessor = null;
+        Node node_aBoard = new Node(aBoard, 0);
+        node_aBoard.predecessor = null;
+        Node node_aBoard_twin = new Node(aBoard.twin(), 0);
+        node_aBoard_twin.predecessor = null;
 
         pq = new MinPQ<Node>();
         pq_twin = new MinPQ<Node>();
 
-        //  int moves = 0;
-        //int moves_twin = 0;
+        //pq.insert(node_aBoard);
+        //pq_twin.insert(node_aBoard_twin);
 
-        pq.insert(node_aboard);
-        pq_twin.insert(node_aboard_twin);
-
-        //boards.push(aboard);
-
-        ArrayList<Board> board_history = new ArrayList<Board>();
-        ArrayList<Board> board_history_twin = new ArrayList<Board>();
-
-        //        board_history.add(node_aboard.board);
-        //        board_history_twin.add(node_aboard_twin.board);
         boolean found = false;
-        Node board1 = pq.delMin();
-        Node board1_twin = pq_twin.delMin();
+        Node board1 = node_aBoard;
+        Node board1_twin = node_aBoard_twin;
         while (!found)//pq.delMin().board.isGoal() | !pq_twin.delMin().board.isGoal() )
         {
 
-            //            StdOut.println("board1"+board1);
-            //            StdOut.println("moves"+moves);
+            StdOut.println("board1: " + board1.nodeboard.toString());
 
             boards.enqueue(board1.nodeboard);
 
@@ -87,43 +76,35 @@ public class Solver {
                     issolvable = false;
 
             }
-
-            boolean repeated = false;
-            boolean repeated_twin = false;
             moves++;
+            StdOut.println("moves: " + moves);
+            
             for (Board i : board1.nodeboard.neighbors()) {
-                if ((board1.predecessor == null) || (i.equals(board1.predecessor.nodeboard) != false)) {
-                    Node aNode = new Node(i, moves());
+                StdOut.println("board nabor: " + i.toString());
+                if ((board1.predecessor == null) || (i.equals(board1.predecessor.nodeboard) == false)) {
+                    Node aNode = new Node(i, moves);
                     aNode.predecessor = board1;
+                    StdOut.println("inserted this one " );
                     pq.insert(aNode);
+                    StdOut.println("pq size: " + pq.size());
+
+                } else {
+                    StdOut.println("NOT inserted this one " );
+                    StdOut.println("pq size: " + pq.size());
+                    
                 }
             }
 
             for (Board i : board1_twin.nodeboard.neighbors()) {
-                if ((board1.predecessor == null) || (i.equals(board1_twin.predecessor.nodeboard) != false)) {
-                    Node aNode = new Node(i, moves());
+                if ((board1_twin.predecessor == null) || (i.equals(board1_twin.predecessor.nodeboard) == false)) {
+                    Node aNode = new Node(i, moves);
                     aNode.predecessor = board1_twin;
-                    pq.insert(aNode);
+                    pq_twin.insert(aNode);
                 }
             }
-
             board1 = pq.delMin();
             board1_twin = pq_twin.delMin();
-            // for (Board i : board1_twin.neighbors()) {
-            //     for (Board j : board_history_twin) {
-            //         if (i.equals(j))
-            //             repeated_twin = true;
-            //     }
-            //     if (repeated_twin != true) {
-            //         pq_twin.insert(new Node(i, moves));
-            //         board_history_twin.add(i);
-
-            //     }
-            //     repeated_twin = false;
-            // }
-
-            // board_history.add(board1);
-            // board_history_twin.add(board1_twin);
+            StdOut.println("-----------------------------------------------------");            
 
         }
 
