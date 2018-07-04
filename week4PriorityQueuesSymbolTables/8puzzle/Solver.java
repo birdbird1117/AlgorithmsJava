@@ -1,5 +1,8 @@
-import edu.princeton.cs.algs4.*;
-import java.lang.*;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
+//import java.lang.*;
 //import java.util.*;
 import java.util.ArrayList;
 

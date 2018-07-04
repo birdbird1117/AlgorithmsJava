@@ -1,6 +1,9 @@
-import edu.princeton.cs.algs4.*;
-import java.lang.*;
-import java.util.*;
+import edu.princeton.cs.algs4.Bag;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
+
+//import java.lang.*;
+//import java.util.*;
 
 public class Board {
 
